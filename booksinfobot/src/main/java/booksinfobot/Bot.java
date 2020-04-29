@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -38,20 +39,23 @@ public class Bot extends TelegramLongPollingBot {
 		update.getUpdateId();
 		chat_id = update.getMessage().getChatId();
 		String text = update.getMessage().getText();
-		System.out.println("ChatID=" + chat_id + "; Text: " + text);
+		Date date = new Date();
+
+		System.out.println(date.toString() + " ChatID=" + chat_id + "; Text: " + text);
+
 		SendMessage sendMessage = new SendMessage().setChatId(chat_id);
 		sendMessage.setReplyMarkup(replyKeyboardMarkup);
 
 		if (text.contains("person")) {
 			text = text.replace("/person ", "");
 			getPerson(text, chat_id);
-		}else {
-			 try {
-		            sendMessage.setText(getMessage(text));
-		            execute(sendMessage);
-		        } catch (TelegramApiException e) {
-		            e.printStackTrace();
-		        }
+		} else {
+			try {
+				sendMessage.setText(getMessage(text));
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -105,7 +109,6 @@ public class Bot extends TelegramLongPollingBot {
 		try {
 			Author author = new Author(name);
 			if (author.noName == "") {
-				
 
 				// Отправляем изображение
 				URL url = new URL(author.getImg());
@@ -136,33 +139,34 @@ public class Bot extends TelegramLongPollingBot {
 				SendMessage sendMessage = new SendMessage().setChatId(chat_id);
 				sendMessage.setText(author.noName);
 				execute(sendMessage);
-				System.out.println("Information that this site dosn't have  author " + author.name + " was send to chatID = " + chat_id);
+				System.out.println("Information that this site dosn't have  author " + author.name
+						+ " was send to chatID = " + chat_id);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-    public String getMessage(String message) {
-        ArrayList<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
 
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+	public String getMessage(String message) {
+		ArrayList<KeyboardRow> keyboard = new ArrayList<>();
+		KeyboardRow keyboardFirstRow = new KeyboardRow();
+		KeyboardRow keyboardSecondRow = new KeyboardRow();
 
-        if (message.equals("Привет") || message.equals("Меню")) {
-            keyboard.clear();
-            keyboardFirstRow.add("Популярное");
-            keyboardFirstRow.add("Новости\uD83D\uDCF0");
-            keyboardSecondRow.add("Полезная Информация");
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Выбрать...";
-        }
+		replyKeyboardMarkup.setSelective(true);
+		replyKeyboardMarkup.setResizeKeyboard(true);
+		replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+		if (message.equals("Привет") || message.equals("Меню")) {
+			keyboard.clear();
+			keyboardFirstRow.add("Популярное");
+			keyboardFirstRow.add("Новости\uD83D\uDCF0");
+			keyboardSecondRow.add("Полезная Информация");
+			keyboard.add(keyboardFirstRow);
+			keyboard.add(keyboardSecondRow);
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
 
 //        if (message.equals("/person GGhe4ka")) {
 //            String person = message.replace("/person ", "");
@@ -172,47 +176,45 @@ public class Bot extends TelegramLongPollingBot {
 //        if (message.equals("Информация о книге \"Девушка с розовыми волосами.\"")) {
 //            return getInfoBook(book);
 //        }
-        if (message.equals("Полезная Информация")) {
-            keyboard.clear();
-            keyboardFirstRow.clear();
-            keyboardFirstRow.add("Информация о книге \"Девушка с розовыми волосами.\"");
-            keyboardSecondRow.add("/person GGhe4ka");
-            keyboardSecondRow.add("Меню");
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Выбрать...";
-        }
+		if (message.equals("Полезная Информация")) {
+			keyboard.clear();
+			keyboardFirstRow.clear();
+			keyboardFirstRow.add("Информация о книге \"Девушка с розовыми волосами.\"");
+			keyboardSecondRow.add("/person GGhe4ka");
+			keyboardSecondRow.add("Меню");
+			keyboard.add(keyboardFirstRow);
+			keyboard.add(keyboardSecondRow);
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
 
-        if (message.equals("Популярное")) {
-            keyboard.clear();
-            keyboardFirstRow.clear();
-            keyboardFirstRow.add("Стихи");
-            keyboardFirstRow.add("Книги\uD83D\uDCDA");
-            keyboardFirstRow.add("Меню");
-            keyboard.add(keyboardFirstRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Выбарть...";
-        }
+		if (message.equals("Популярное")) {
+			keyboard.clear();
+			keyboardFirstRow.clear();
+			keyboardFirstRow.add("Стихи");
+			keyboardFirstRow.add("Книги\uD83D\uDCDA");
+			keyboardFirstRow.add("Меню");
+			keyboard.add(keyboardFirstRow);
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
 
-        if (message.equals("Стихи") || message.equals("Книги\uD83D\uDCDA")) {
-            lastMessage = message;
-            keyboard.clear();
-            keyboardFirstRow.clear();
-            keyboardFirstRow.add("Сегодня");
-            keyboardFirstRow.add("За неделю");
-            keyboardFirstRow.add("За месяц");
-            keyboardFirstRow.add("За все время");
-            keyboardFirstRow.add("Меню");
-            keyboard.add(keyboardFirstRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Выбрать...";
-        }
+		if (message.equals("Стихи") || message.equals("Книги\uD83D\uDCDA")) {
+			lastMessage = message;
+			keyboard.clear();
+			keyboardFirstRow.clear();
+			keyboardFirstRow.add("Сегодня");
+			keyboardFirstRow.add("За неделю");
+			keyboardFirstRow.add("За месяц");
+			keyboardFirstRow.add("За все время");
+			keyboardFirstRow.add("Меню");
+			keyboard.add(keyboardFirstRow);
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
 
-        boolean b = message.equals("Сегодня")
-                || message.equals("За неделю")
-                || message.equals("За месяц")
-                || message.equals("За все время");
+		boolean b = message.equals("Сегодня") || message.equals("За неделю") || message.equals("За месяц")
+				|| message.equals("За все время");
 
 //        if (lastMessage != null && lastMessage.equals("Стихи") && b) {
 //            String[] poems = top.getTopPoems(message);
@@ -225,6 +227,6 @@ public class Bot extends TelegramLongPollingBot {
 //            return "\uD83D\uDCDA";
 //        }
 
-        return message;
-    }
+		return message;
+	}
 }

@@ -9,17 +9,17 @@ import org.jsoup.select.Elements;
 
 public class Book {
 	private Document document;
-	private static String SITENAME1 = "https://www.surgebook.com/Kristina_Matsuk/book/losing-control-teryaya-kontrol";
-	private static String SITENAME2 = "https://www.surgebook.com/ashly_dueal/book/nochnye-zhivotnye-ast";
+//	private static String SITENAME1 = "https://www.surgebook.com/Kristina_Matsuk/book/losing-control-teryaya-kontrol";
+//	private static String SITENAME2 = "https://www.surgebook.com/ashly_dueal/book/nochnye-zhivotnye-ast";
 	
 	
-	public Book() {
-		connect(); 	
+	public Book(String href) {
+		connect(href); 	
 	}
 	
-	private void connect() {
+	private void connect(String href) {
 		try {
-			document = Jsoup.connect(SITENAME2).get();
+			document = Jsoup.connect(href).get();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
