@@ -248,16 +248,16 @@ public class Bot extends TelegramLongPollingBot {
 		} else if (lastMessage.equals("Стихи")) {
 			Top top = new Top();
 			if (message.equals("Сегодня")) {
-				return getTopPoem(top.getTopBooks(message));
+				return getTopPoem(top.getTopPoems(message));
 			}
 			if (message.equals("За неделю")) {
-				return getTopPoem(top.getTopBooks(message));
+				return getTopPoem(top.getTopPoems(message));
 			}
 			if (message.equals("За месяц")) {
-				return getTopPoem(top.getTopBooks(message));
+				return getTopPoem(top.getTopPoems(message));
 			}
 			if (message.equals("За все время")) {
-				return getTopPoem(top.getTopBooks(message));
+				return getTopPoem(top.getTopPoems(message));
 			}
 		}
 
