@@ -2,7 +2,11 @@ package booksinfobot;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,23 +21,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class Bot extends TelegramLongPollingBot {
-//	Book book = new Book();
+	Book book = new Book("https://www.surgebook.com/GGhe4ka/book/devushka-s-rozovymi-volosami");
 	private Long chat_id;
 	String lastMessage = "";
 	ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-
-	/*
-	 * public void onUpdateReceived(Update update) { update.getUpdateId(); chat_id =
-	 * update.getMessage().getChatId(); System.out.println("chat_id=" + chat_id +
-	 * " input_text = " + update.getMessage().getText()); SendMessage sendMessage =
-	 * new SendMessage().setChatId(update.getMessage().getChatId());
-	 * sendMessage.setText(input(update.getMessage().getText())); try {
-	 * execute(sendMessage); } catch (TelegramApiException e) { e.printStackTrace();
-	 * } String text = update.getMessage().getText();
-	 * 
-	 * if(text.contains("person")){ text = text.replace("/person ", "");
-	 * getPerson(text, update.getMessage().getChatId()); } }
-	 */
 
 	public void onUpdateReceived(Update update) {
 		update.getUpdateId();
@@ -70,40 +61,61 @@ public class Bot extends TelegramLongPollingBot {
 		return "1161419085:AAGb_c5WNql9jXAcCyvPR6RUS1JPncgs9ZE";
 	}
 
-	/*
-	 * public String input(String msg) { String result = "I dont know what to do";
-	 * if (msg.contains("book")) { System.out.println("msg.contains(\"book\")");
-	 * result = getInfoBook(); System.out.println("getInfoBook(); DONE");
-	 * System.out.println(result); } return result; }
-	 */
+	public String getInfoBook(String href[]) {
+		String info = "";
+		for (int i = 0; i < href.length; i++) {
+			info = "";
+			Book book = new Book(href[i]);
+			if (Files.exists(Paths.get("src\\main\\pictures")))
+				;
+			{
+				System.out.println("File: src/main/pictures exists");
+				try {
+					Files.delete(Paths.get("src\\main\\pictures"));
+					System.out.println("File: src/main/pictures was deleted");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
-	/*
-	 * public String getInfoBook(){ try { URL url = new URL(book.getImg());
-	 * System.out.println("URL url = new URL(book.getImg()); DONE"); // берем сслыку
-	 * на изображение BufferedImage img = ImageIO.read(url); // качаем изображение в
-	 * буфер File outputfile = new File("image.jpg"); //создаем новый файл в который
-	 * поместим //скаченое изображение ImageIO.write(img, "jpg", outputfile);
-	 * //преобразовуем наше буферное изображение //в новый файл SendPhoto sendPhoto
-	 * = new SendPhoto().setChatId(chat_id); sendPhoto.setPhoto(outputfile);
-	 * execute(sendPhoto); System.out.println("Photo was sended"); } catch
-	 * (Exception e){ System.out.println("File not found"); e.printStackTrace(); }
-	 */
+			SendPhoto sendPhotoRequest = new SendPhoto();
 
-	/*
-	 * String title = book.getTitle(); System.out.println("Title= " + title); String
-	 * author = book.getAutorName(); System.out.println("Author= " + author); String
-	 * geners = book.getGeners(); System.out.println("Gener= " + geners);
-	 */
+			try (InputStream in = new URL(book.getImg()).openStream()) {
+				System.out.println("\ntry (InputStream in = new URL(book.getImg()).openStream()) {\n");
+				Files.copy(in, Paths.get("src\\main\\pictures"));
+				sendPhotoRequest.setChatId(chat_id);
+				sendPhotoRequest.setPhoto(new File("src\\main\\pictures"));
+				try {
+					execute(sendPhotoRequest);
+					System.out.println("\nBook's photo # " + (i + 1) + " was send to User ChatId: " + chat_id
+							+ ". Cover's href: " + book.getImg());
+				} catch (TelegramApiException e) {
+					e.printStackTrace();
+				}
+				if (Files.exists(Paths.get("src\\main\\pictures")))
+					;
 
-	/*
-	 * String info = book.getTitle() + "\nАвтор: " + book.getAutorName() +
-	 * "\nЖанр: " + book.getGeners() + "\n\nОписание\n" + book.getDescription() +
-	 * "\n\nКоличество лайков " + book.getLikes() + "\n\nПоследние комментарии\n" +
-	 * book.getCommentList();
-	 * System.out.println("String info = book.getTitle()  DONE");
-	 * 
-	 * return info; }
-	 */
+			} catch (IOException e) {
+				System.out.println("File not found");
+			}
+
+			info = book.getTitle() + "\nАвтор " + book.getAutorName() + "\nЖанр " + book.getGeners() + "\nОписание\n"
+					+ book.getDescription() + "\nКоличество лайков\n" + book.getLikes() + "\nПоследние комментарии\n"
+					+ book.getCommentList();
+			info = info + "\nСсылка на страницу книги:\n" + book.getHrefBook();
+
+			SendMessage sendMessage = new SendMessage().setChatId(chat_id);
+			sendMessage.setText(info);
+			System.out.println("info sent to user ChatId" + chat_id + " :/n" + info);
+			try {
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return "\uD83D\uDC40";
+	}
 
 	private void getPerson(String name, long chat_id) {
 		try {
@@ -173,9 +185,10 @@ public class Bot extends TelegramLongPollingBot {
 //            return getInfoPerson(person);
 //        }
 //
-//        if (message.equals("Информация о книге \"Девушка с розовыми волосами.\"")) {
-//            return getInfoBook(book);
-//        }
+		if (message.equals("Информация о книге \"Девушка с розовыми волосами.\"")) {
+			String[] tempString = { book.getHrefBook(), book.getHrefBook() };
+			return getInfoBook(tempString);
+		}
 		if (message.equals("Полезная Информация")) {
 			keyboard.clear();
 			keyboardFirstRow.clear();
@@ -201,6 +214,7 @@ public class Bot extends TelegramLongPollingBot {
 
 		if (message.equals("Стихи") || message.equals("Книги\uD83D\uDCDA")) {
 			lastMessage = message;
+			System.out.println("lastMessage = " + lastMessage);
 			keyboard.clear();
 			keyboardFirstRow.clear();
 			keyboardFirstRow.add("Сегодня");
@@ -212,21 +226,69 @@ public class Bot extends TelegramLongPollingBot {
 			replyKeyboardMarkup.setKeyboard(keyboard);
 			return "Выбрать...";
 		}
+//
+//		boolean b = message.equals("Сегодня") || message.equals("За неделю") || message.equals("За месяц")
+//				|| message.equals("За все время");
 
-		boolean b = message.equals("Сегодня") || message.equals("За неделю") || message.equals("За месяц")
-				|| message.equals("За все время");
-
-//        if (lastMessage != null && lastMessage.equals("Стихи") && b) {
-//            String[] poems = top.getTopPoems(message);
-//            return getTopPoem(poems);
-//        }
-
-//        if (lastMessage != null && lastMessage.equals("Книги\uD83D\uDCDA") && b) {
-//            String[] books = top.getTopBook(message);
-//            getTopBooks(books);
-//            return "\uD83D\uDCDA";
-//        }
+		if (lastMessage.equals("Книги\uD83D\uDCDA")) {
+			Top top = new Top();
+			if (message.equals("Сегодня")) {
+				System.out.println("Книги\uD83D\uDCDA" + " Сегодня");
+				return getInfoBook(top.getTopBooks(message));
+			}
+			if (message.equals("За неделю")) {
+				return getInfoBook(top.getTopBooks(message));
+			}
+			if (message.equals("За месяц")) {
+				return getInfoBook(top.getTopBooks(message));
+			}
+			if (message.equals("За все время")) {
+				return getInfoBook(top.getTopBooks(message));
+			}
+		} else if (lastMessage.equals("Стихи")) {
+			Top top = new Top();
+			if (message.equals("Сегодня")) {
+				return getTopPoem(top.getTopBooks(message));
+			}
+			if (message.equals("За неделю")) {
+				return getTopPoem(top.getTopBooks(message));
+			}
+			if (message.equals("За месяц")) {
+				return getTopPoem(top.getTopBooks(message));
+			}
+			if (message.equals("За все время")) {
+				return getTopPoem(top.getTopBooks(message));
+			}
+		}
 
 		return message;
 	}
+
+	public String getTopPoem(String[] text) {
+		SendMessage sendMessage = new SendMessage().setChatId(chat_id);
+		for (int i = 0; i < text.length; i++) {
+			try {
+				sendMessage.setText(text[i]);
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return "\uD83D\uDC40";
+	}
+
+//	public void getTopBooks(String[] hrefs) {
+//        for (String href : hrefs) {
+//            Book book = new Book(href);
+//            SendMessage message = new SendMessage();
+//            message.setChatId(chat_id);
+//            message.setText(getInfoBook(book));
+//            try {
+//                execute(message);
+//            } catch (TelegramApiException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

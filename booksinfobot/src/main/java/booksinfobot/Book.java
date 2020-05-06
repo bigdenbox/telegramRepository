@@ -9,12 +9,18 @@ import org.jsoup.select.Elements;
 
 public class Book {
 	private Document document;
+	private String hrefBook = "";
 //	private static String SITENAME1 = "https://www.surgebook.com/Kristina_Matsuk/book/losing-control-teryaya-kontrol";
 //	private static String SITENAME2 = "https://www.surgebook.com/ashly_dueal/book/nochnye-zhivotnye-ast";
 	
-	
 	public Book(String href) {
 		connect(href); 	
+		this.hrefBook = href;
+		
+	}
+	
+	public String getHrefBook() {
+		return hrefBook;
 	}
 	
 	private void connect(String href) {
@@ -49,11 +55,11 @@ public class Book {
 	public String getImg() {
 		Elements elements = document.getElementsByClass("cover-book");
         String url = elements.attr("style");
-        System.out.println("URL_before= " + url);
+ //       System.out.println("URL_before= " + url);
         //чистим url от лишнего
         url = url.replace("background-image: url('", "");
         url = url.replace("');", "");
-        System.out.println("URL_after= " + url);
+ //       System.out.println("URL_after= " + url);
         return url;
 	}
 
