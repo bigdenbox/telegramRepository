@@ -84,7 +84,7 @@ public class Book {
         //чистим от дат
         comment = comment.replaceAll("\\d{4}-\\d{2}-\\d{2}", "");
         //чистим от времени
-        comment = comment.replaceAll("\\d{4}-\\d{2}-\\d{2}", "");
+        comment = comment.replaceAll("\\d{2}:\\d{2}:\\d{2}", "");
         return comment;
     }
 	

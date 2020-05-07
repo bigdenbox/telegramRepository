@@ -28,6 +28,10 @@ public class Author {
 		this.name = name;
 	}
 
+	public String getNickName() {
+		return this.name;
+	}
+	
 	public String getName() {
 		Elements namePerson = document.getElementsByClass("author-name bold");
 		return namePerson.text();

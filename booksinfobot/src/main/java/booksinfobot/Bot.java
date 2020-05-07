@@ -37,28 +37,50 @@ public class Bot extends TelegramLongPollingBot {
 		SendMessage sendMessage = new SendMessage().setChatId(chat_id);
 		sendMessage.setReplyMarkup(replyKeyboardMarkup);
 
-		if (text.contains("person")) {
-			text = text.replace("/person ", "");
+		if (text.contains("person_")) {
+			text = text.replace("/person_", "");
 			getPerson(text, chat_id);
 		} else {
-			try {
-				sendMessage.setText(getMessage(text));
-				execute(sendMessage);
-			} catch (TelegramApiException e) {
-				e.printStackTrace();
+			if (text.contains("person")) {
+				text = text.replace("/person ", "");
+				getPerson(text, chat_id);
+			} else {
+
+				try {
+					sendMessage.setText(getMessage(text));
+					execute(sendMessage);
+				} catch (TelegramApiException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
 	public String getBotUsername() {
-		// TODO Auto-generated method stub
 		return "@booksinfobot";
 	}
 
 //	@Override
 	public String getBotToken() {
-		// TODO Auto-generated method stub
 		return "1161419085:AAGb_c5WNql9jXAcCyvPR6RUS1JPncgs9ZE";
+	}
+
+	public String getAuthorNickName(Book book) {
+		System.out.println("getAuthorNickName STARTED");
+		String authorNickName = "";
+		String authorHref = book.getHrefBook();
+		System.out.println("book.getHrefBook() = " + book.getHrefBook());
+		authorHref = authorHref.replaceAll("https://www.surgebook.com/", "");
+		// https://www.surgebook.com/LilMiller/book/nezabudka
+
+		int indexStringBook = authorHref.indexOf("/book");
+		System.out.println("indexStringBook = " + indexStringBook);
+
+		authorNickName = authorHref.substring(0, indexStringBook);
+
+		System.out.println("authorNickName = " + authorNickName);
+
+		return authorNickName;
 	}
 
 	public String getInfoBook(String href[]) {
@@ -103,6 +125,13 @@ public class Bot extends TelegramLongPollingBot {
 					+ book.getDescription() + "\nКоличество лайков\n" + book.getLikes() + "\nПоследние комментарии\n"
 					+ book.getCommentList();
 			info = info + "\nСсылка на страницу книги:\n" + book.getHrefBook();
+
+			try {
+				Author author = new Author(getAuthorNickName(book));
+				info = info + "\nИнформация об авторе /person_" + author.getNickName();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 			SendMessage sendMessage = new SendMessage().setChatId(chat_id);
 			sendMessage.setText(info);
@@ -180,11 +209,19 @@ public class Bot extends TelegramLongPollingBot {
 			return "Выбрать...";
 		}
 
-//        if (message.equals("/person GGhe4ka")) {
-//            String person = message.replace("/person ", "");
-//            return getInfoPerson(person);
-//        }
-//
+//		if (message.contains("person")) {
+//			System.out.println("message = " + message);
+//			String person = message.replace("/person_", "");
+//			System.out.println("message after replace /person_ = " + person);
+//			Author author;
+//			try {
+//				author = new Author(person);
+//				return author.getInfoPerson();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+
 		if (message.equals("Информация о книге \"Девушка с розовыми волосами.\"")) {
 			String[] tempString = { book.getHrefBook(), book.getHrefBook() };
 			return getInfoBook(tempString);
