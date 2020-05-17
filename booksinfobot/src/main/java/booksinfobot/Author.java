@@ -1,12 +1,12 @@
 package booksinfobot;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 public class Author {
 	Document document = null;
@@ -22,8 +22,8 @@ public class Author {
 		try {
 			document = Jsoup.connect("https://www.surgebook.com/" + name).get();
 		} catch (Exception e) {
-				this.noName = "There are no any author with name: " + name;
-				System.out.println("Author. " + noName);
+			this.noName = "There are no any author with name: " + name;
+			System.out.println("Author. " + noName);
 		}
 		this.name = name;
 	}
@@ -31,7 +31,7 @@ public class Author {
 	public String getNickName() {
 		return this.name;
 	}
-	
+
 	public String getName() {
 		Elements namePerson = document.getElementsByClass("author-name bold");
 		return namePerson.text();

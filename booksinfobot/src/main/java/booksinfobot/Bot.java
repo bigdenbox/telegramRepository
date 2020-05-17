@@ -20,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
 public class Bot extends TelegramLongPollingBot {
 	Book book = new Book("https://www.surgebook.com/GGhe4ka/book/devushka-s-rozovymi-volosami");
 	private Long chat_id;
@@ -88,13 +89,13 @@ public class Bot extends TelegramLongPollingBot {
 		for (int i = 0; i < href.length; i++) {
 			info = "";
 			Book book = new Book(href[i]);
-			if (Files.exists(Paths.get("src\\main\\pictures")))
+			if (Files.exists(Paths.get("picture")))
 				;
 			{
-				System.out.println("File: src/main/pictures exists");
+				System.out.println("File: picture exists");
 				try {
-					Files.delete(Paths.get("src\\main\\pictures"));
-					System.out.println("File: src/main/pictures was deleted");
+					Files.delete(Paths.get("picture"));
+					System.out.println("File: picture was deleted");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -104,9 +105,9 @@ public class Bot extends TelegramLongPollingBot {
 
 			try (InputStream in = new URL(book.getImg()).openStream()) {
 				System.out.println("\ntry (InputStream in = new URL(book.getImg()).openStream()) {\n");
-				Files.copy(in, Paths.get("src\\main\\pictures"));
+				Files.copy(in, Paths.get("picture"));
 				sendPhotoRequest.setChatId(chat_id);
-				sendPhotoRequest.setPhoto(new File("src\\main\\pictures"));
+				sendPhotoRequest.setPhoto(new File("picture"));
 				try {
 					execute(sendPhotoRequest);
 					System.out.println("\nBook's photo # " + (i + 1) + " was send to User ChatId: " + chat_id
@@ -114,7 +115,7 @@ public class Bot extends TelegramLongPollingBot {
 				} catch (TelegramApiException e) {
 					e.printStackTrace();
 				}
-				if (Files.exists(Paths.get("src\\main\\pictures")))
+				if (Files.exists(Paths.get("picture")))
 					;
 
 			} catch (IOException e) {
@@ -158,7 +159,7 @@ public class Bot extends TelegramLongPollingBot {
 				BufferedImage img = ImageIO.read(url);
 
 				// качаем изображение в буфер
-				File outputfile = new File("image.jpg");
+				File outputfile = new File("image2.jpg");
 
 				// создаем новый файл в который поместим
 				// скаченое изображение
