@@ -1,13 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>bigdenbox</groupId>
-  <artifactId>pingSomethingbot</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>ping IP</name>
-  <description>Can ping IP</description>
-  <packaging>jar</packaging>
-  
-  <build>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>bigdenbox</groupId>
+	<artifactId>pingSomethingbot</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ping IP</name>
+	<description>Can ping IP</description>
+	<packaging>jar</packaging>
+
+	<build>
 		<plugins>
 
 			<plugin>
@@ -21,11 +23,13 @@
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
-						<configuration>
+						
+  					<configuration>
 							<outputDirectory>
 								${project.build.directory}/libs
 							</outputDirectory>
 						</configuration>
+	
 					</execution>
 				</executions>
 			</plugin>
@@ -37,9 +41,11 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>libs/</classpathPrefix>
+							
+ 						<classpathPrefix>libs/</classpathPrefix>
+	
 							<mainClass>
-								ingSomethingbot.MainPingSomething
+								pingSomethingbot.MainPingSomething
 							</mainClass>
 						</manifest>
 					</archive>
@@ -87,5 +93,5 @@
 		</dependency>
 
 	</dependencies>
-  
+
 </project>

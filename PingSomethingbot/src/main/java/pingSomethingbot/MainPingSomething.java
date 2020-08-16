@@ -15,6 +15,7 @@ public class MainPingSomething {
 		try {
 			telegram.registerBot(bot);
 		} catch (TelegramApiRequestException e) {
+			System.out.println("Errrrrrrooooooorrrrrrrrrrrrr");
 			e.printStackTrace();
 		}
 	}

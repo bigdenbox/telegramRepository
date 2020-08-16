@@ -74,16 +74,19 @@ public class Bot extends TelegramLongPollingBot {
 		replyKeyboardMarkup.setResizeKeyboard(true);
 		replyKeyboardMarkup.setOneTimeKeyboard(false);
 
-		if (message.equals("Привет") || message.equals("Menu")) {
+		if (message.equals("\\Start") || message.equals("Menu")) {
+			lastMessage = message;
 			keyboard.clear();
 			keyboardFirstRow.add("Информация");
-			keyboardFirstRow.add("Stop");
-			keyboardSecondRow.add("Login");
+			keyboardFirstRow.add("Ping");
+			keyboardSecondRow.add("Menu");
 			keyboard.add(keyboardFirstRow);
 			keyboard.add(keyboardSecondRow);
 			replyKeyboardMarkup.setKeyboard(keyboard);
 			return "Выбрать...";
 		}
+		
+
 
 //		if (message.contains("person")) {
 //			System.out.println("message = " + message);
@@ -103,18 +106,56 @@ public class Bot extends TelegramLongPollingBot {
 //			return getInfoBook(tempString);
 //		}
 		
-		if (message.equals("Login")) {
+//		if (message.equals("Login")) {
+//			lastMessage = message;
+//			keyboard.clear();
+//			keyboardFirstRow.clear();
+//			keyboardSecondRow.clear();
+//			keyboardFirstRow.add("Send my Name");
+//			keyboardFirstRow.add("Ping 8.8.8.7");
+//			keyboardSecondRow.add("Ping 8.8.8.8");
+//			keyboardSecondRow.add("Menu");
+//			keyboard.add(keyboardFirstRow);
+//			keyboard.add(keyboardSecondRow);
+//			replyKeyboardMarkup.setKeyboard(keyboard);
+//			return "Выбрать...";
+//		}
+		
+		if (message.contains("ping")) {
+			lastMessage = message.replace("Repeat ", "");;
+			String ipString = message.replace("ping ", "");
+			keyboard.clear();
+			keyboardFirstRow.add("Информация");
+//			keyboardFirstRow.add("Repeat " + lastMessage);
+//			keyboardFirstRow.add("Stop");
+			keyboardSecondRow.add("Menu");
+			keyboard.add(keyboardFirstRow);
+			keyboard.add(keyboardSecondRow);
+			Ip ip = new Ip(ipString);
+			try {
+				sendMessage.setText(ip.getIpAnswer());
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+			
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
+		
+		if (message.equals("Информация")) {
+			lastMessage = message;
 			keyboard.clear();
 			keyboardFirstRow.clear();
 			keyboardSecondRow.clear();
-			keyboardFirstRow.add("Send my Name");
-			keyboardFirstRow.add("Ping 8.8.8.7");
-			keyboardSecondRow.add("Ping 8.8.8.8");
+			keyboardFirstRow.add("Информация");
+//			keyboardFirstRow.add("Ping 8.8.8.7");
+//			keyboardSecondRow.add("Ping 8.8.8.8");
 			keyboardSecondRow.add("Menu");
 			keyboard.add(keyboardFirstRow);
 			keyboard.add(keyboardSecondRow);
 			replyKeyboardMarkup.setKeyboard(keyboard);
-			return "Выбрать...";
+			return "Введите IP в формате \nping 192.168.0.1";
 		}
 
 		if (message.equals("Send my Name")) {
@@ -128,14 +169,14 @@ public class Bot extends TelegramLongPollingBot {
 			return "Выбрать...";
 		}
 
-		if (message.equals("Ping 8.8.8.8") || message.equals("ping ")) {
+		if (message.equals("Ping 8.8.8.8")) {
 			lastMessage = message;
 			System.out.println("lastMessage = " + lastMessage);
 			keyboard.clear();
 			keyboardFirstRow.clear();
 			keyboardFirstRow.add("Repeat " + lastMessage);
 			keyboardFirstRow.add("Ping 8.8.8.8");
-	//		keyboardFirstRow.add("За месяц");
+			keyboardFirstRow.add("Информация");
 	//		keyboardFirstRow.add("За все время");
 			keyboardFirstRow.add("Menu");
 			keyboard.add(keyboardFirstRow);
@@ -163,6 +204,51 @@ public class Bot extends TelegramLongPollingBot {
 			keyboardFirstRow.add("Menu");
 			keyboard.add(keyboardFirstRow);
 			Ip ip = new Ip("8.8.8.7");
+			try {
+				sendMessage.setText(ip.getIpAnswer());
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+			
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
+		
+		if (message.equals("Ping")) {
+			lastMessage = message;
+			System.out.println("lastMessage = " + lastMessage);
+			keyboard.clear();
+			keyboardFirstRow.clear();
+//			keyboardFirstRow.add("Repeat " + lastMessage);
+//			keyboardFirstRow.add("Ping 8.8.8.8");
+			keyboardFirstRow.add("Информация");
+			keyboardFirstRow.add("Ping");
+			keyboardFirstRow.add("Menu");
+			keyboard.add(keyboardFirstRow);
+			try {
+				sendMessage.setText("Enter IP adress like 192.168.0.1 or web adress like Google.com");
+				execute(sendMessage);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+			replyKeyboardMarkup.setKeyboard(keyboard);
+			return "Выбрать...";
+		}
+		
+		if (lastMessage.equalsIgnoreCase("ping")) {
+			lastMessage = message;
+			System.out.println("lastMessage = " + lastMessage);
+			keyboard.clear();
+			keyboardFirstRow.clear();
+	//		keyboardFirstRow.add("Repeat " + lastMessage);
+			keyboardFirstRow.add("Информация");
+			keyboardFirstRow.add("Ping");
+	//		keyboardFirstRow.add("За месяц");
+	//		keyboardFirstRow.add("За все время");
+			keyboardFirstRow.add("Menu");
+			keyboard.add(keyboardFirstRow);
+			Ip ip = new Ip(lastMessage);
 			try {
 				sendMessage.setText(ip.getIpAnswer());
 				execute(sendMessage);
